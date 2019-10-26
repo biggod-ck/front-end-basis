@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    (function () {
+
+
+      let currentFn = null;
+      let currentFnMap = new Map();
+      let currentIndex = -1;
+      function useState(initValue) {
+        currentIndex++
+        let index = currentIndex; // 为什么要重新赋值 生成一个新的变量 而不是使用全局的currentIndex
+        let nowUseState = currentFnMap.get(currentFn);
+        if(nowUseState[index]){
+          return nowUseState[index]
+        }else{
+          let stateParis = [initValue,(v)=>{
+            nowUseState[index][0] = v;
+            currentFn()
+          }]
+          nowUseState[index] = stateParis
+          return stateParis;
+        }
+      }
+
+      function react(f) {
+        currentFn = function(){
+          currentIndex = -1;
+          f()
+        };
+        currentFnMap.set(currentFn,[])
+        f()
+      }
+      window.react = react;
+      window.useState = useState;
+    })()
+
+    react(function () {
+      let [count, setCount] = useState(1);
+      let [step, setStep] = useState(1);
+      window.setCount = setCount;
+      window.setStep = setStep;
+      return count + step
+    })
+
+
+
+
+
+
+  </script>
+</body>
+
+</html>

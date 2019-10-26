@@ -42,3 +42,5 @@ function quickSort(arr){
 }
 
 console.log(quickSort([9,8,7,15,125,1,2,1,1]))
+
+// 优化的写法
