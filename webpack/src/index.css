@@ -1,0 +1,6 @@
+@import './index.scss';
+@import './index.less';
+
+body{
+  background: red;
+}
