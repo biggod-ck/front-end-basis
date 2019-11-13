@@ -1,0 +1,29 @@
+{
+  "presets": [
+    // "@babel/preset-env" 直接写不能传递参数
+    [
+      "@babel/preset-env" /*插件包 含有很多插件*/,
+      {
+        // 使用到的api会自动转换 类似于es7的includes等方法，并且是按需加载
+        "useBuiltIns":"usage",
+        "corejs":3  // 类似于以前的babel-polyfill
+      }
+    ]
+  ],
+  "plugins": [
+    //"@babel/plugin-proposal-class-properties" 直接一个字符串或者数组传参的方式
+    [
+      "@babel/plugin-proposal-decorators",
+      {
+        "legacy": true
+      }
+    ],
+    [
+      "@babel/plugin-proposal-class-properties",
+      {
+        "loose": true // 设置为true才能使用装饰器 并且装饰器的插件需要再上面
+      }
+    ],
+    "@babel/plugin-transform-runtime" //整合代码 注意class的转换 classCallCheck 加上和不加的区别
+  ]
+}
