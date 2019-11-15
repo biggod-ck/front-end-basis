@@ -1,8 +1,9 @@
+import A1 from 'jquery' // 这一行代码不会被打包
 const test = () => {
   console.log('jiantouhanshu')
 }
 test()
-
+console.log(A1) 
 @log(1)
 class A {
   @params a = 1

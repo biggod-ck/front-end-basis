@@ -2,13 +2,17 @@
   "presets": [
     // "@babel/preset-env" 直接写不能传递参数
     [
-      "@babel/preset-env" /*插件包 含有很多插件*/,
+      "@babel/preset-env" /*插件包 含有很多插件 类似于转换 箭头函数 const let的定义等*/,
       {
         // 使用到的api会自动转换 类似于es7的includes等方法，并且是按需加载
         "useBuiltIns":"usage",
         "corejs":3  // 类似于以前的babel-polyfill
       }
-    ]
+    ],
+    "@babel/preset-react", // 解析react语法
+    ["@babel/preset-typescript",{
+      // "allExtensions":true // vue ts的时候 需要配置这个参数
+    }]
   ],
   "plugins": [
     //"@babel/plugin-proposal-class-properties" 直接一个字符串或者数组传参的方式
