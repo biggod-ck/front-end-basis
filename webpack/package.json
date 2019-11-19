@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "webpack-dev-server --env.development --config ./build/webpack.base.config.js",
     "build": "webpack --env.production --config ./build/webpack.base.config.js",
-    "build:dev": "webpack --env.development --config ./build/webpack.base.config.js"
+    "build:dev": "webpack --env.development --config ./build/webpack.base.config.js",
+    "dll": "webpack  --config ./build/webpack.dll.config.js"
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",

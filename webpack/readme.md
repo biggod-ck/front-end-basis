@@ -30,5 +30,6 @@
 - tree-shaking scope-hoisting 
   1. package.json  配置sideEffects:false 不应用副作用，可以删除导入了没有使用的包，但是存在问题，引入css的会出问题。可以使用 require('./***.css) 的样式来引用css，因为只针对es6的模块。但是这种写法有点丑陋,使用sideEffects:[ "**/*.css" ],这样css就不会被移除了
 
+- dll 动态链接库
 
 

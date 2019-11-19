@@ -1,5 +1,6 @@
 import React from 'react';
 import reactDom from 'react-dom';
+import C from './counter'
 require('./style/index.css')
 require('./style/index.less')
 import img from '../assets/lz.jpg'
@@ -30,6 +31,7 @@ class Counter extends React.Component<Ipros,Istate>{
     return <div>
       {this.state.count}
       <button onClick={this.add}> 加</button>
+      <C></C>
     </div>
   }
 }
