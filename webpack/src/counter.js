@@ -1,5 +1,5 @@
-import React from 'react'
+import React from 'react';
 
-export default ()=>{
-  return <h1>Counter</h1>
-}
+export default () => {
+  return <h1>Counter</h1>;
+};
