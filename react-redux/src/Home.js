@@ -24,6 +24,65 @@ const home = props => {
           promiseAdd2 好好理解吧
         </button>
       </div>
+      <div>
+        <h1>因为DVA 逼着了解一下saga</h1>
+        <button
+          onClick={() => {
+            props.sagaRun1()
+          }}
+        >
+          saga1
+        </button>
+        <button
+          onClick={() => {
+            props.sagaRun2()
+          }}
+        >
+          saga2
+        </button>
+        <button
+          onClick={() => {
+            props.sagaRun3()
+          }}
+        >
+          saga3
+        </button>
+        <button
+          onClick={() => {
+            props.sagaRun4()
+          }}
+        >
+          saga4
+        </button>
+        <button
+          onClick={() => {
+            props.sagaRun5()
+          }}
+        >
+          saga5
+        </button>
+        <button
+          onClick={() => {
+            props.sagaRun6()
+          }}
+        >
+          saga6
+        </button>
+        <button
+          onClick={() => {
+            props.sagaRun7()
+          }}
+        >
+          saga7
+        </button>
+        <button
+          onClick={() => {
+            props.sagaRun8()
+          }}
+        >
+          saga8
+        </button>
+      </div>
     </div>
   );
 };
@@ -53,6 +112,14 @@ const mapDispatchToProps1 = dispatch => {
     promiseAdd:counterActions2.promiseAdd,
     minus:counterActions1.minus1,
     add:counterActions1.add1,
+    sagaRun1:()=>({type:'asyncAdd1'}),
+    sagaRun2:()=>({type:'asyncAdd2'}),
+    sagaRun3:()=>({type:'asyncAdd3'}),
+    sagaRun4:()=>({type:'asyncAdd4'}),
+    sagaRun5:()=>({type:'asyncAdd5'}),
+    sagaRun6:()=>({type:'asyncAdd6'}),
+    sagaRun7:()=>({type:'asyncAdd7'}),
+    sagaRun8:()=>({type:'asyncAdd8'}),
   },dispatch)
 };
 
