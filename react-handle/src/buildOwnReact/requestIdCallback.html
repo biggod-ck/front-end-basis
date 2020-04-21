@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let i = 0
+    let j = 0
+    function test(de){
+      j++
+      // de.timeRemaining  这个时间会一直减少
+     while(de.timeRemaining() > 1){
+       i++
+     }
+     console.log(i)
+     if(i > 100000){
+       console.log(j)
+      return 
+     }else{
+      requestIdleCallback(test) // 再次注册
+     }
+     
+    }
+    requestIdleCallback(test)
+  </script>
+</body>
+</html>
