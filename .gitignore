@@ -2,7 +2,11 @@
 
 # dependencies
 node_modules
+<<<<<<< HEAD
+.pnp
+=======
 /.pnp
+>>>>>>> a9936091305e2e62eca6fb18001e72eed6699a23
 .pnp.js
 
 # testing
@@ -13,7 +17,7 @@ node_modules
 /out/
 
 # production
-/build
+build
 
 # misc
 .DS_Store
