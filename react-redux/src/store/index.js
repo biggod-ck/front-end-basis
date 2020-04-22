@@ -61,10 +61,10 @@ sagaMiddleWare.run(function* () {
 });
 sagaMiddleWare.run(function* () {
   yield all([
-    yield takeEvery('asyncAdd4', function* () {
+     yield takeEvery('asyncAdd4', function* () {
       console.log(4);
     }),
-    yield takeEvery('asyncAdd5', function* () {
+     yield takeEvery('asyncAdd5', function* () {
       console.log(5);
     }),
   ]);
@@ -79,6 +79,7 @@ sagaMiddleWare.run(function* () {
       })
     });
   });
+  
   yield fork(function* () {
     yield takeEvery('asyncAdd7', function* () {
       console.log(7);
