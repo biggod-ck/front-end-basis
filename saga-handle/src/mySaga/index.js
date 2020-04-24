@@ -5,25 +5,41 @@ function createSagaMiddleware() {
   const events = new eventEmitter();
   function sagaMiddleware(API) {
     function run(generator) {
-      let it = generator();
+      let it = generator[Symbol.iterator] ? generator : generator();
       function next(args) {
         const { value: effect, done } = it.next(args); // 返回yield后面的值 yield take('abc') 返回的就是 take('abc')的返回值
         if (!done) {
-          // todo take是等待动作的发生
-          switch (effect.type) {
-            case 'TAKE':
-              events.once(effect.actionType, next);
-              break;
-            case 'PUT':
-              API.dispatch(effect.action);
-              next();
-              break;
-            case 'CALL':
-              const { fn, args, context } = effect.payload;
-              fn.apply(context, args).then(next);
-              break;
-            default:
-              break;
+          if (effect[Symbol.iterator]) {
+            // todo yield generate 的情况
+            run(effect); // 执行内部的iterator。执行完毕后，继续外层的next
+            next(args);
+          } else if (typeof effect === 'object' && typeof effect.then === 'function') {
+            // 支持 yield 为promise的情况
+            effect.then(next);
+          } else {
+            switch (effect.type) {
+              case 'TAKE':
+                events.once(effect.actionType, next);
+                break;
+              case 'PUT':
+                API.dispatch(effect.action);
+                next();
+                break;
+              case 'CALL':
+                const { fn, args, context } = effect.payload;
+                fn.apply(context, args).then(next);
+                break;
+              case 'FORK':
+                const { task } = effect;
+                run(task);
+                next();
+                break;
+              case 'CPS':
+                effect.fn(effect.args, next);
+                break;
+              default:
+                break;
+            }
           }
         }
       }

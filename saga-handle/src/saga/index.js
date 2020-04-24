@@ -1,60 +1,42 @@
 // import { takeEvery, delay, put, all, fork, take, call } from 'redux-saga/effects';
-import { take, put, delay, call } from '../mySaga/effects';
+import { take, put, delay, call, takeEvery,cps } from '../mySaga/effects';
 
 function* add() {
   console.log('add start');
-  // yield delay(2000);
-  console.log(`add end`);
   yield put({
     type: 'reducerAdd',
     payload: {
       num: 10,
     },
   });
+  console.log(`add end`);
 }
 function* minus() {
   console.log('minus start');
-  // yield delay(1000);
-  console.log(`minus end`);
   yield put({
     type: 'reducerMinus',
     payload: {
       num: 1,
     },
   });
+  console.log(`minus end`);
+}
+const delayPromise = function () {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve('500ms过后执行minus');
+    }, 500);
+  });
+};
+const nodeCps = function(ms,callBack){
+  console.log('node cps')
+  setTimeout(()=>{
+    callBack('node cps的参数')
+  },ms)
 }
 
 const rootSage = function* () {
-  // ! 1
-  // yield takeEvery('ADD', add);
-  // yield takeEvery('MINUS', minus);
-
-  // !2
-  // yield all([
-  //   yield takeEvery('ADD', add),
-  //   yield takeEvery('MINUS', minus)
-  // ])
-
-  // !3
-  // yield all([takeEvery('ADD', add), takeEvery('MINUS', minus)]);
-
-  // !4 无阻塞
-  // yield fork(function* () {
-  //   yield takeEvery('ADD', add);
-  // });
-  // yield fork(function* () {
-  //   yield takeEvery('MINUS', minus);
-  // });
-
-  // take
-  // yield fork(function* () {
-  //   yield take('ADD');
-  //   yield call(add);
-  // });
-  // yield fork(function* () {
-  //   yield take('MINUS');
-  //   yield call(minus);
-  // });
+  yield takeEvery('everyAdd', add);
   yield take('ADD');
   const value = yield delay(2000, 'delay第二个参数');
   console.log(value);
@@ -68,12 +50,13 @@ const rootSage = function* () {
     2,
   );
   console.log('call args', args);
-  yield put({
-    type: 'reducerAdd',
-    payload: {
-      num: 50,
-    },
-  });
+  yield minus();
+  let promiseArgs = yield delayPromise();
+  console.log('yield 支持promise的后续参数', promiseArgs);
+  let cpsArgs = yield cps(nodeCps,1000)
+  console.log('cpsArgs',cpsArgs)
+  yield add();
+  
 };
 
 export default rootSage;

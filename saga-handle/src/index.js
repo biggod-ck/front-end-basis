@@ -32,6 +32,15 @@ function App(props) {
       >
         简单组合saga redux MINUS操作
       </button>
+      <button
+        onClick={() => {
+          props.dispatch({
+            type: 'everyAdd',
+          });
+        }}
+      >
+        takeEvery
+      </button>
     </div>
   );
 }
