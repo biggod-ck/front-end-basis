@@ -1,5 +1,5 @@
 // import { takeEvery, delay, put, all, fork, take, call } from 'redux-saga/effects';
-import { take, put, delay, call, takeEvery,cps } from '../mySaga/effects';
+import { take, put, delay, call, takeEvery, cps, fork } from '../mySaga/effects';
 
 function* add() {
   console.log('add start');
@@ -28,12 +28,12 @@ const delayPromise = function () {
     }, 500);
   });
 };
-const nodeCps = function(ms,callBack){
-  console.log('node cps')
-  setTimeout(()=>{
-    callBack('node cps的参数')
-  },ms)
-}
+const nodeCps = function (ms, callBack) {
+  console.log('node cps');
+  setTimeout(() => {
+    callBack('node cps的参数');
+  }, ms);
+};
 
 const rootSage = function* () {
   yield takeEvery('everyAdd', add);
@@ -53,10 +53,14 @@ const rootSage = function* () {
   yield minus();
   let promiseArgs = yield delayPromise();
   console.log('yield 支持promise的后续参数', promiseArgs);
-  let cpsArgs = yield cps(nodeCps,1000)
-  console.log('cpsArgs',cpsArgs)
+  let cpsArgs = yield cps(nodeCps, 1000);
+  console.log('cpsArgs', cpsArgs);
   yield add();
-  
+  const t = yield fork(function* () {
+    yield 1;
+    yield 2;
+  });
+  console.log('cancel', t);
 };
 
 export default rootSage;

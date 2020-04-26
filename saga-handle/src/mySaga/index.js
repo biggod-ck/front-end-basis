@@ -31,11 +31,16 @@ function createSagaMiddleware() {
                 break;
               case 'FORK':
                 const { task } = effect;
-                run(task);
-                next();
+                let returnTask = task(); // 执行 返回一个迭代器。 我们的run既可以执行迭代器 也可以执行生成器
+                run(returnTask);
+                next(returnTask);
                 break;
               case 'CPS':
                 effect.fn(effect.args, next);
+                break;
+              case 'CANCEL':
+                effect.iterator.return('over');
+                next();
                 break;
               default:
                 break;
