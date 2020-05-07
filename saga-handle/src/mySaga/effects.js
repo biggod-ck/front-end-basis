@@ -53,6 +53,13 @@ export function cancel(iterator) {
   };
 }
 
+export function all(generators) {
+  return {
+    type: 'ALL',
+    generators,
+  };
+}
+
 /**
  *rootSagas里面调用的时候 yield takeEvery(类型,生成器) value是一个 iterator。就会去run这个iterator
  * 1. 执行到 yield fork() 的时候。返回了一个 {type:"FORK"，task}的对象
@@ -64,8 +71,8 @@ export function cancel(iterator) {
 export function* takeEvery(actionType, task) {
   yield fork(function* () {
     while (true) {
-      yield take(actionType);
-      yield task(); // 我们已经支持了 yield generator的做法
+      let action = yield take(actionType);
+      yield task(action); // 我们已经支持了 yield generator的做法
     }
   });
 }
