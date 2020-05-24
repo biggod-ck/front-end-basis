@@ -21,17 +21,25 @@ export default function (opts = {}) {
   function model(m) {
     prefixNamespace(m);
     app._models.push(m);
+    return m
   }
 
   function router(router) {
     app._router = router;
   }
 
+  let initialReducer = {};
+
   function start(container) {
-    let reducers = getReducers(app);
+
+    for (const model of app._models) {
+      initialReducer[model.namespace] = getReducer(model);
+    }
+    let rootReducer = createReducer();
+
     const sagas = getSagas(app);
     const sagaMiddleware = createSagaMiddleware();
-    app._store = applyMiddleware(sagaMiddleware)(createStore)(reducers);
+    app._store = applyMiddleware(sagaMiddleware)(createStore)(rootReducer);
     sagas.forEach((saga) => {
       sagaMiddleware.run(saga);
     });
@@ -39,22 +47,18 @@ export default function (opts = {}) {
       <Provider store={app._store}>{app._router()}</Provider>,
       document.querySelector(container),
     );
+    function createReducer() {
+      return combineReducers(initialReducer);
+    }
   }
-
   return app;
 }
-// 拿到所有modal里面的reducer
-function getReducers(app) {
-  let reducers = {}; // 这个是合并的reducer，传递给combineReducers({counter1:function(){},counter2:function(){}})
-  for (let model of app._models) {
-    // m.reducers 可以拿到 reducers
-    reducers[model.namespace] = function (state = model.state, action) {
-      // debugger
-      let reducer = model.reducers ? model.reducers[action.type] : undefined; // 类似于策略模式的写法。获取到对应的reducer进行执行
-      return reducer ? reducer(state, action) : state;
-    };
-  }
-  return combineReducers(reducers);
+
+function getReducer(model) {
+  return function (state = model.state || {}, action) {
+    let reducer = model.reducers ? model.reducers[action.type] : undefined; // 类似于策略模式的写法。获取到对应的reducer进行执行
+    return reducer ? reducer(state, action) : state;
+  };
 }
 
 function getSagas(app) {
