@@ -1,25 +1,25 @@
 // bindActionCreator 解决 store.dispatch({type:***})
 // 转换为内部派发
-// actionCreator 
+// actionCreator
 // let actions = {
-//   add(){
+//   add(...args){
 //     return {
 //       type:'ADD'
 //     }
 //   }
 // }
 
-export default (actions,dispatch)=>{
-  if(typeof actions === 'function'){
-    return (...args)=>{
-      dispatch(actions(...args))
-    }
+export default (actions, dispatch) => {
+  if (typeof actions === 'function') {
+    return (...args) => {
+      dispatch(actions(...args));
+    };
   }
-  let actionCreator = {}
+  let actionCreator = {};
   for (const actionKey in actions) {
-    actionCreator[actionKey] = (...args)=>{
-      dispatch(actions[actionKey](...args)) // store.dispatch({type:'add'})
-    }
+    actionCreator[actionKey] = (...args) => {
+      dispatch(actions[actionKey](...args)); // store.dispatch({type:'add'})
+    };
   }
-  return actionCreator
-}
+  return actionCreator;
+};

@@ -21,7 +21,7 @@ export default function (opts = {}) {
   function model(m) {
     prefixNamespace(m);
     app._models.push(m);
-    return m
+    return m;
   }
 
   function router(router) {
@@ -31,7 +31,6 @@ export default function (opts = {}) {
   let initialReducer = {};
 
   function start(container) {
-
     for (const model of app._models) {
       initialReducer[model.namespace] = getReducer(model);
     }
@@ -66,6 +65,18 @@ function getSagas(app) {
   for (let model of app._models) {
     sagas.push(function* () {
       for (let key in model.effects) {
+        /* 简单粗暴的直接监听对应的type
+        yield sagaEffects.takeEvery(key, function* (action) {
+          yield model.effects[key](action, {
+            ...sagaEffects,
+            put: (action) =>
+              sagaEffects.put({
+                ...action,
+                type: prefixType(action.type, model),
+              }),
+          });
+        });
+        */
         const watcher = getWatcher(key, model.effects[key], model);
         yield sagaEffects.fork(watcher);
       }
