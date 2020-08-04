@@ -1,35 +1,21 @@
-import React from './buildOwnReact/react'
+import React from './react';
+import ReactDOM from './react-dom';
+import App from './App';
+import  R from './react/index'
 
-let ele = React.createElement(
-  'div',
-  { id: 'app' },
-  React.createElement('span', { style: { color: 'red' } }, 'hello'),
-  React.createElement('span', { style: { color: 'green' } }, 'word'),
-);
+let ele = R.createElement('h1',{className:'title',style:{backgroundColor:'red'}},'hello',R.createElement('span',{style:{color:'green'}},'world'))
 
-function App(props) {
-  const [state, setState] = React.useState('么么哒😘');
-  const [state1, setState1] = React.useState('么么哒😘');
-  return (
-    <div>
-      <h1>Hi {props.name}</h1>
-      <div
-        onClick={() => {
-          setState(()=>new Date().getTime());
-        }}
-      >
-        {state}
-      </div>
-      <div
-        onClick={() => {
-          setState1(()=>new Date().getTime());
-        }}
-      >
-        {state1}
-      </div>
-    </div>
-  );
+// function TestFunction(props){
+//   return R.createElement('h1',{className:'title',style:{backgroundColor:'red'}},'hello',R.createElement('span',{style:{color:'green'}},props.name))
+// }
+// <TestFunction /> 编译过后就是 React.createElement(TestFunction,{name:'chendage'}) TestFunction({name:'我是函数组件的属性'})
+
+class Test extends React.Component{
+  render(){
+    return R.createElement('h1',{className:'title',style:{backgroundColor:'red'}},'hello',R.createElement('span',{style:{color:'green'}},this.props.name))
+  }
 }
-const element = <App name="foo" />;
+// 
 
-React.render(element, document.getElementById('root'));
+let fnc = R.createElement(Test,{name:'我是类组件的属性'}) // 编译过后
+ReactDOM.render(ele, document.getElementById('root'));

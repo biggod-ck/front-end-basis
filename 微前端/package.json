@@ -1,0 +1,11 @@
+{
+  "name": "micro-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "qiankun": "^2.0.16",
+    "single-spa": "^5.5.5",
+    "single-spa-vue": "^1.8.2"
+  }
+}
