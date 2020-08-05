@@ -1,4 +1,24 @@
-import { compileTwoElements } from "./vDom";
+import { compileTwoElements } from './vDom';
+
+export let updateQueue = {
+  updaters: [],
+  isPending: false,
+  add(updater) {
+    this.updaters.push(updater);
+  },
+  batchUpdate() {
+    if (this.isPending) {
+      return;
+    }
+    this.isPending = true;
+    let { updaters } = this;
+    let updater;
+    while ((updater = updaters.pop())) {
+      updater.updateComponent();
+    }
+    this.isPending = false;
+  },
+};
 
 export class Updater {
   constructor(instance) {
@@ -30,9 +50,13 @@ class Component {
     if (this.componentWillUpdate) {
       this.componentWillUpdate(props, state); // todo 组件将要更新的生命周期
     }
-    let newRenderElement = this.render();
-    let currentElement = compileTwoElements(oldRenderElement,newRenderElement);
+    let newRenderElement = this.render(); //
+    let currentElement = compileTwoElements(oldRenderElement, newRenderElement);
     this.currentElement = currentElement;
+    // 更新完成的生命周期
+    if (this.componentDidUpdate) {
+      this.componentDidUpdate(props, state);
+    }
   }
   static isReactComponent = {};
 }

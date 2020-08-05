@@ -115,7 +115,7 @@ function updateClassComponent(oldElement, newElement) {
 function updateFunctionComponent(oldElement, newElement) {
   let newRenderElement = newElement.type(newElement.props); // 新的虚拟DOM
   let oldRenderElement = oldElement.renderElement; // 老的虚拟DOM
-  let currentElement = compileTwoElements(oldRenderElement,newRenderElement);
+  let currentElement = compileTwoElements(oldRenderElement,newRenderElement); // oldRenderElement 上的修改就会映射到 oldElement.renderElement 上，对象的引用
   newElement.renderElement = currentElement
 }
 
