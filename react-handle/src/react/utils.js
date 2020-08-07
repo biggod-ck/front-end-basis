@@ -29,7 +29,7 @@ function setProp(dom, key, value) {
 
 export function patchProps(dom, oldProps, newProps) {
   for (const key in oldProps) {
-    if (newProps.hasOwnProperty(key)) {
+    if (newProps.hasOwnProperty(key) && key !== 'children') {
       setProp(dom, key, newProps[key]);
     } else {
       dom.removeAttribute(key);

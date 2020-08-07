@@ -14,7 +14,7 @@ export function createDOM(element) {
   } else if ($$typeof === CLASS_COMPONENT) {
     dom = createClassComponent(element);
   }
-  element.dom = dom; // 给对应的虚拟DOM上绑定特定的元素结点
+  element.dom = dom; // 给对应的虚拟DOM上绑定特定的元素结点 
   return dom;
 }
 
@@ -57,7 +57,7 @@ function createChild(element, parentNode) {
     });
 }
 
-// todo 两个虚拟DOM的对比
+// todo 两个虚拟DOM的对比。并且对比后返回最新的虚拟DOM
 export function compileTwoElements(oldElement, newElement) {
   oldElement = onlyOne(oldElement);
   newElement = onlyOne(newElement);
@@ -71,12 +71,17 @@ export function compileTwoElements(oldElement, newElement) {
     currentDom.parentNode.replaceChild(newDOM, currentDom);
     currentElement = newElement;
   } else {
-    // todo 元素的类型是一样的情况
+    
+    //! 暴力替换肯定不行
+    // let newDOM = createDOM(newElement);
+    // currentDom.parentNode.replaceChild(newDOM, currentDom);
+    // currentElement = newElement;
+
+    // todo 元素的类型是一样的情况 这里需要引入diff算法来解决
     updateElement(oldElement, newElement);
   }
   return currentElement;
 }
-
 
 function updateElement(oldElement, newElement) {
   let currentDOM = (newElement.dom = oldElement.dom);
@@ -84,18 +89,18 @@ function updateElement(oldElement, newElement) {
     if (oldElement.content !== newElement.content) {
       // 结点的文本不一样
       oldElement.textContent = newElement.content;
-    } else if (oldElement.$$typeof === ELEMENT) {
-      // 如果老结点是一个元素。
-      updateDOMProps(currentDOM, oldElement.props, newElement.props);
-      oldElement.props = newElement.props; // ? 为啥呢？
-    } else if (oldElement.$$typeof === FUNCTION_COMPONENT) {
-      // 如果老结点是一个函数组件
-      updateFunctionComponent(oldElement, newElement);
-    } else if (oldElement.$$typeof === CLASS_COMPONENT) {
-      // 如果老结点是一个类组件
-      updateClassComponent(oldElement, newElement);
-      newElement.componentInstance = oldElement.componentInstance; // ? 为什么新的上面的instance要保存为老的instance
     }
+  } else if (oldElement.$$typeof === ELEMENT) {
+    // 如果老结点是一个元素。
+    updateDOMProps(currentDOM, oldElement.props, newElement.props);
+    oldElement.props = newElement.props; // ? 为啥呢？
+  } else if (oldElement.$$typeof === FUNCTION_COMPONENT) {
+    // 如果老结点是一个函数组件
+    updateFunctionComponent(oldElement, newElement);
+  } else if (oldElement.$$typeof === CLASS_COMPONENT) {
+    // 如果老结点是一个类组件
+    updateClassComponent(oldElement, newElement);
+    newElement.componentInstance = oldElement.componentInstance; // ? 为什么新的上面的instance要保存为老的instance
   }
 }
 
@@ -104,19 +109,19 @@ function updateDOMProps(dom, oldProps, newProps) {
   return patchProps(dom, oldProps, newProps);
 }
 
-// ? 这里是怎么回事
+// 
 function updateClassComponent(oldElement, newElement) {
-  let componentInstance = oldElement.componentInstance; // 组件实例
-  let updater = componentInstance.$updater; // ? $updater是什么？ 怎么来的
-  let nextProps = newElement.props;
-  updater.emitUpdate(nextProps);
+  let componentInstance = oldElement.componentInstance; // 初始化渲染的时候会在组件的虚拟DOM上挂载当前的组件实例
+  let updater = componentInstance.$updater; // 每个组件都有一个对应的$updater
+  let nextProps = newElement.props; // 组件上的新的属性
+  updater.emitUpdate(nextProps); //! 原来组件内部的nextProps是从这里来的。在forceUpdate里面再去调用 compileTwoElements()。一句话。oldRenderElements是一个引用。
 }
 
 function updateFunctionComponent(oldElement, newElement) {
   let newRenderElement = newElement.type(newElement.props); // 新的虚拟DOM
   let oldRenderElement = oldElement.renderElement; // 老的虚拟DOM
-  let currentElement = compileTwoElements(oldRenderElement,newRenderElement); // oldRenderElement 上的修改就会映射到 oldElement.renderElement 上，对象的引用
-  newElement.renderElement = currentElement
+  let currentElement = compileTwoElements(oldRenderElement, newRenderElement); // oldRenderElement 上的修改就会映射到 oldElement.renderElement 上，对象的引用
+  newElement.renderElement = currentElement;
 }
 
 export function ReactElement($$typeof, type, key, ref, props) {
